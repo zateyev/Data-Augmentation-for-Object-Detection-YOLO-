@@ -32,14 +32,18 @@ def place_distorted_sample(outImgTight, foregroundPixTight, BoundRect, bkgImg):
 
         boundRectFin = np.zeros((2, 2), float)
         # The order of x and y have been reversed for yolo
-        boundRectFin[1][1] = float(BoundRect[1][0] - BoundRect[0][0]) / float(bgHeight)
-        boundRectFin[1][0] = float(BoundRect[1][1] - BoundRect[0][1]) / float(bgWidth)
-        boundRectFin[0][1] = float(posY) / float(bgHeight) + boundRectFin[1][1] / float(
-            2
-        )
-        boundRectFin[0][0] = float(posX) / float(bgWidth) + boundRectFin[1][0] / float(
-            2
-        )
+        # boundRectFin[1][1] = float(BoundRect[1][0] - BoundRect[0][0]) / float(bgHeight)
+        # boundRectFin[1][0] = float(BoundRect[1][1] - BoundRect[0][1]) / float(bgWidth)
+        # boundRectFin[0][1] = float(posY) / float(bgHeight) + boundRectFin[1][1] / float(2)
+        # boundRectFin[0][0] = float(posX) / float(bgWidth) + boundRectFin[1][0] / float(2)
+        # xmin boundRectFin[0][0]
+        # ymin boundRectFin[0][1]
+        # xmax boundRectFin[1][0]
+        # ymax boundRectFin[1][1]
+        boundRectFin[0][0] = posX
+        boundRectFin[0][1] = posY
+        boundRectFin[1][0] = boundRectFin[0][0] + (BoundRect[1][1] - BoundRect[0][1])
+        boundRectFin[1][1] = boundRectFin[0][1] + (BoundRect[1][0] - BoundRect[0][0])
 
         foregroundpixBkg = tuple(map(tuple, indices))
         finalImg[foregroundpixBkg] = outImgTight[foregroundPixTight]
@@ -95,11 +99,19 @@ def augment_data():
             image=sampleImg, bg_color=bgColor, bg_thresh=bgThresh
         )
 
+        img_list = list(filter(lambda x: x.shape[0] > sampleImg.shape[0] and x.shape[1] > sampleImg.shape[1], bkgFileLoader.bkgImgList))
+
+        assert len(img_list) > 0, 'No background image compatible in size'
+
         while count < output_per_sample:
 
-            bkg_img = bkgFileLoader.bkgImgList[
-                np.random.randint(0, bkgFileLoader.count)
+            bkg_img = img_list[
+                np.random.randint(0, len(img_list))
             ]
+
+            # if sampleImg.shape[0] < bkg_img.shape[0] and sampleImg.shape[1] < bkg_img.shape[1]:
+            #     continue
+
             gauss_noise_flag = np.less(np.random.uniform(0, 1), gauss_noise_prob)
             median_noise_flag = np.less(np.random.uniform(0, 1), median_noise_prob)
             sharpen_flag = np.less(np.random.uniform(0, 1), sharpen_prob)
@@ -108,16 +120,16 @@ def augment_data():
             brightness_flag = np.less(np.random.uniform(0, 1), brightness_prob)
             affine_rot_flag = np.less(np.random.uniform(0, 1), aff_rot_prob)
 
-            if pers_trans_flag:
-                image_modifier.perspectiveTransform(
-                    maxXangle=maxXangle_Persp,
-                    maxYangle=maxYangle_Persp,
-                    maxZangle=maxZangle_Persp,
-                    bgColor=bgColor,
-                )
+            # if pers_trans_flag:
+            #     image_modifier.perspectiveTransform(
+            #         maxXangle=maxXangle_Persp,
+            #         maxYangle=maxYangle_Persp,
+            #         maxZangle=maxZangle_Persp,
+            #         bgColor=bgColor,
+            #     )
 
-            if affine_rot_flag and not pers_trans_flag:
-                image_modifier.affineRotate(maxXangle=maxAngle_Affine, bgColor=bgColor)
+            # if affine_rot_flag and not pers_trans_flag:
+            #     image_modifier.affineRotate(maxXangle=maxAngle_Affine, bgColor=bgColor)
 
             if gauss_noise_flag:
                 image_modifier.addGaussianNoise(noiseMean=0, noiseVariance=2)
