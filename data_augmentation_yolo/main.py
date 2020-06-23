@@ -19,12 +19,12 @@ def place_distorted_sample(outImgTight, foregroundPixTight, BoundRect, bkgImg):
         finalImg = np.array(bkgImg).copy()
 
         posX = np.random.randint(0, bgWidth - outWidth)
-        if posX + outWidth > bgWidth:
-            posX = bgWidth - outWidth - 10
+        # if posX + outWidth > bgWidth:
+        #     posX = bgWidth - outWidth - 10
 
-        posY = np.random.randint(0, bgHeight - 10)
-        if posY + outHeight > bgHeight - outHeight:
-            posY = bgHeight - outHeight - 10
+        posY = np.random.randint(0, bgHeight - outHeight)
+        # if posY + outHeight > bgHeight:
+        #     posY = bgHeight - outHeight - 10
 
         indices = np.zeros((np.shape(foregroundPixTight)), np.uint64)
         indices[0] = np.array([foregroundPixTight[0]]) + posY
@@ -85,6 +85,8 @@ def augment_data():
     logger.info("logger created")
     bkgFileLoader = BackgroundFileLoader()
     bkgFileLoader.loadbkgFiles(backgroundFilePath)
+
+    out_bounding_boxes = ""
 
     for sampleImgPath in glob.glob(os.path.join(samplePath, "*.jpg")):
 
@@ -172,21 +174,24 @@ def augment_data():
                 cv.imwrite(
                     os.path.join(outputfolder, str(outputName + ".jpg")), finalImg
                 )
-                with open(
-                    os.path.join(outputfolder, str(outputName + ".txt")), "w"
-                ) as f:
-                    details = (
-                        "0 "
+                details = (
+                        outputName + ".jpg "
                         + " ".join(
-                            str(coord) for coord in np.reshape(finalBoundRect, 4)
-                        )
-                        + "\n"
-                    )
-                    f.write(details)
+                    str(int(coord)) for coord in np.reshape(finalBoundRect, 4)
+                )
+                        + " 1\n"
+                )
+                out_bounding_boxes = out_bounding_boxes + details
+
                 logger.log(logging.INFO, "%s augmented file created", outputName)
                 count = count + 1
 
             image_modifier.resetFlags()
+
+    with open(
+            os.path.join(outputfolder, str("out_bounding_boxes.txt")), "w"
+    ) as f:
+        f.write(out_bounding_boxes)
 
 
 if __name__ == "__main__":
