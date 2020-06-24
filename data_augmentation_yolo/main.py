@@ -179,7 +179,7 @@ def augment_data():
                         + " ".join(
                     str(int(coord)) for coord in np.reshape(finalBoundRect, 4)
                 )
-                        + " 1\n"
+                        + " 0\n"
                 )
                 out_bounding_boxes = out_bounding_boxes + details
 
