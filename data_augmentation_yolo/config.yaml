@@ -1,11 +1,11 @@
-BACKGROUND_FILE_PATH: "../data/background/original"
+BACKGROUND_FILE_PATH: "../data/background"
 #SAMPLE_FILES_PATH: "../data/GermanFlag"
 #OUTPUT_PATH: "../data/GermanFlag/augmentedFiles"
 #SAMPLE_FILES_PATH: "../data/my/idc_back"
 #OUTPUT_PATH: "../data/my/idc_back/augmentedFiles"
-SAMPLE_FILES_PATH: "../data/my/idc_front"
-OUTPUT_PATH: "../data/my/idc_front/augmentedFiles"
-BACKGROUND_COLOR : 255
+SAMPLE_FILES_PATH: "../data/my/liveness/phone"
+OUTPUT_PATH: "../data/my/liveness/phone/augmentedFiles"
+BACKGROUND_COLOR : 0
 BACKGROUND_THRESH : 8
 MAX_X_ANGLE: 3
 MAX_Y_ANGLE: 3
@@ -16,6 +16,6 @@ PERSP_TRANS_PROB: 0.3
 GAUSS_NOISE_PROB: 0.4
 MEDIAN_NOISE_PROB: 0.4
 SHARPEN_PROB: 0.3
-OUTPUT_PER_SAMPLE: 3
+OUTPUT_PER_SAMPLE: 10
 SCALING_PROB: 0.6
 BRIGHTNESS_PROB: 0.5

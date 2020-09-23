@@ -88,7 +88,7 @@ def augment_data():
 
     out_bounding_boxes = ""
 
-    for sampleImgPath in glob.glob(os.path.join(samplePath, "*.jpg")):
+    for sampleImgPath in glob.glob(os.path.join(samplePath, "*.jpg")):  # or jpeg
 
         filenameWithExt = os.path.split(sampleImgPath)[1]
         filename = os.path.splitext(filenameWithExt)[0]
@@ -101,14 +101,18 @@ def augment_data():
             image=sampleImg, bg_color=bgColor, bg_thresh=bgThresh
         )
 
-        img_list = list(filter(lambda x: x.shape[0] > sampleImg.shape[0] and x.shape[1] > sampleImg.shape[1], bkgFileLoader.bkgImgList))
+        img_list = list(filter(
+            lambda x: sampleImg.shape[0] < x.shape[0] < sampleImg.shape[0] * 7 and sampleImg.shape[1] < x.shape[1] < sampleImg.shape[1] * 7,
+                               bkgFileLoader.bkgImgList))
 
-        assert len(img_list) > 0, 'No background image compatible in size'
+        img_list_size = len(img_list)
+        assert img_list_size > 0, 'No background image compatible in size. FileName: ' + filename
+        print('img_list size: ' + str(img_list_size))
 
         while count < output_per_sample:
 
             bkg_img = img_list[
-                np.random.randint(0, len(img_list))
+                np.random.randint(0, img_list_size)
             ]
 
             # if sampleImg.shape[0] < bkg_img.shape[0] and sampleImg.shape[1] < bkg_img.shape[1]:
@@ -179,7 +183,7 @@ def augment_data():
                         + " ".join(
                     str(int(coord)) for coord in np.reshape(finalBoundRect, 4)
                 )
-                        + " 0\n"
+                        + " 5\n"  # category
                 )
                 out_bounding_boxes = out_bounding_boxes + details
 
