@@ -102,7 +102,7 @@ def augment_data():
         )
 
         img_list = list(filter(
-            lambda x: sampleImg.shape[0] < x.shape[0] < sampleImg.shape[0] * 7 and sampleImg.shape[1] < x.shape[1] < sampleImg.shape[1] * 7,
+            lambda x: sampleImg.shape[0] < x.shape[0] < sampleImg.shape[0] * 5 and sampleImg.shape[1] < x.shape[1] < sampleImg.shape[1] * 5,
                                bkgFileLoader.bkgImgList))
 
         img_list_size = len(img_list)
@@ -183,7 +183,7 @@ def augment_data():
                         + " ".join(
                     str(int(coord)) for coord in np.reshape(finalBoundRect, 4)
                 )
-                        + " 5\n"  # category
+                        + " 4\n"  # category
                 )
                 out_bounding_boxes = out_bounding_boxes + details
 

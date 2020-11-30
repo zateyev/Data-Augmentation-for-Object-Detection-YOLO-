@@ -14,9 +14,9 @@ The available image transfromations are as follows:-
 The starting point for  using the library is the [CreateSamples](data_augmentation_yolo/main.py). The user can defined the required parameters in [Parameters](data_augmentation_yolo/config.yaml). The parameters provide a veriety of information to the executing function about the number of outputsamples to generate per input sample image, amount of rotation to perform, the background color(either black or white) and the probablity with which each of the transformations are to be performed. So for each iteration of the loop generating an output image( to bee used as a sample fr object detection), a uniform random number is generated for each transformation and based on its value and the probablity specified by the user the transformation may or may not be performed. Also some trasformations like gaussian noise and sharpening are not combined(this is handled by the code internally and the end user does not need to worry) since it leads higly noise samples.
 
 # Basic example
-Object                                         |  Background                                        |           Combined               |
------------------------------------------------|----------------------------------------------------|----------------------------------|
-<img src="data/example/Object.jpg" width=200>  |  <img src="data/example/Background.jpg" width=200> |   <img src="data/example/Combined.jpg" width=200> |
+Object                                         |  Background                                            |           Combined                                  |
+-----------------------------------------------|--------------------------------------------------------|-----------------------------------------------------|
+![alt text](data/example/Object.jpg "Object")  |  ![alt text](data/example/Background.jpg "Background") |   ![alt text](data/example/Combined.jpg "Combined") |
 
 SUGGESTION: As sample images it is good to use images where there are a couple of rows and columns of white/black pixels padding the object. These will help in reducing the cropping of the object during rotation.
 
